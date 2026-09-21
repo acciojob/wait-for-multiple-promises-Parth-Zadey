@@ -1,9 +1,7 @@
 const output = document.getElementById("output");
 
-// Helper to create a promise that resolves with its duration between 1 and 3 seconds
 function createPromise(name) {
-  // Random time between 1 and 3 seconds (e.g. 1.25s, 2.7s)
-  const time = (Math.random() * 2 + 1);
+  const time = Math.random() * 2 + 1; // Random time between 1 and 3 seconds
 
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -12,16 +10,11 @@ function createPromise(name) {
   });
 }
 
-const startTime = performance.now();
-
 const p1 = createPromise("Promise 1");
 const p2 = createPromise("Promise 2");
 const p3 = createPromise("Promise 3");
 
 Promise.all([p1, p2, p3]).then((results) => {
-  const endTime = performance.now();
-  const totalTime = ((endTime - startTime) / 1000).toFixed(3);
-
   // Clear the initial "Loading..." row
   output.innerHTML = "";
 
@@ -32,8 +25,11 @@ Promise.all([p1, p2, p3]).then((results) => {
     output.appendChild(row);
   });
 
+  // Calculate total time as the maximum time taken by any single promise
+  const maxTime = Math.max(...results.map((r) => r.time));
+
   // Append total row
   const totalRow = document.createElement("tr");
-  totalRow.innerHTML = `<td>Total</td><td>${totalTime}</td>`;
+  totalRow.innerHTML = `<td>Total</td><td>${maxTime.toFixed(3)}</td>`;
   output.appendChild(totalRow);
 });
